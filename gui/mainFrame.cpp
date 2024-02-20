@@ -4,7 +4,6 @@
 #include "mainFrame.hpp"
 #include "guiCalculator.hpp"
 #include "../constants.h"
-#include "../fortran/ballistics.h"
 
 const wxSize controlSize = wxSize(200, -1);
 const int border = 5;
@@ -14,9 +13,7 @@ const uint8_t midGray = 128;
 const uint8_t lightGray = 64;
 
 mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics calculator") {
-    g = minecraftGravity;
-    v = maxArrowVelocity;
-    t = 0.90;
+    motionF = new motionFactory(maxArrowVelocity, minecraftGravity, 0.90);
     selectingAngle = false;
     this->SetSize(wxSize(800, 500));
     {//create and initialize file menu
@@ -123,13 +120,13 @@ mainFrame::~mainFrame(){
 }
 
 void mainFrame::setAngle(double angle){
-    t = angle;
+    motionF->setAngle(angle);
     angleSlider->SetValue((int)(angle * 100));
     regraph();
 }
 
 void mainFrame::setVelocity(double velocity){
-    v = velocity;
+    motionF->setVelocity(velocity);
     velocitySlider->SetValue((int)velocity);
     regraph();
 }
@@ -150,12 +147,15 @@ void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
     double x = event.GetX() / graphScale;
     double y = (graph->GetHeight() - event.GetY()) / graphScale;
     unsetAngleSelect();
-    double angle = getAngle(&v, &g, &x, &y);
-    if(isnan(angle)){
-        SetStatusText("Invalid position");
+    try{
+        motionF->setAngle(x, y);
+    }
+    catch(...){
+        SetStatusText("Invalid position");        
         return;
     }
-    this->setAngle(angle);
+    angleSlider->SetValue((int)(motionF->getCurrentAngle() * 100));
+    regraph();
 }
 
 void mainFrame::findAngleOnButtonClick(wxCommandEvent& event){
@@ -172,13 +172,13 @@ void mainFrame::mainFrameOnSize(wxSizeEvent& event){
     
 }
 
-void mainFrame::velocitySliderOnScroll(wxScrollEvent& event) {
-    v = velocitySlider->GetValue();
+void mainFrame::velocitySliderOnScroll(wxScrollEvent& event){
+    motionF->setVelocity(velocitySlider->GetValue());
     regraph();
 }
 
 void mainFrame::angleSliderOnScroll(wxScrollEvent& event) {
-    t = (double)angleSlider->GetValue() / 100.0;
+    motionF->setAngle((double)angleSlider->GetValue() / 100.0);
     regraph();
 }
 
@@ -209,16 +209,10 @@ void mainFrame::regraph(){
         p = rowStart;
         p.OffsetY(data, 1);
     }
+    motion* thisMotion = motionF->getMotion(1.0 / (float)graphScale);
     p = wxNativePixelData::Iterator(data);
-    long range = (long)getRange(&v, &g, &t);
-    for(long i = 0; i < range * graphScale; i++, p++){
-        double pos = i / (double)graphScale;
-        double val = getHeight(&v, &g, &t, &pos) * (double)graphScale;
-        if(val < 0){
-            val = 0;
-            break;
-        }
-        double y = graph->GetHeight() - val;
+    for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++){
+        double y = graph->GetHeight() - (val * graphScale);
         p.OffsetY(data, y);
         p.Red() = 255;
         p.Green() = 0;

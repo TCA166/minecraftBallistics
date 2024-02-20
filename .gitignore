@@ -1,3 +1,4 @@
 *.o
 *.mod
-console
+consoleCalculator
+guiCalculator

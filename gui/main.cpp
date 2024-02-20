@@ -12,5 +12,3 @@ bool app::OnInit() {
     frame->Show(true);
     return true;
 }
-
-

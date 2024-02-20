@@ -1,5 +1,7 @@
 #include <wx/wx.h>
 
+#include "../D/motion.hpp"
+
 class mainFrame : public wxFrame {
     public:
         mainFrame();
@@ -29,5 +31,5 @@ class mainFrame : public wxFrame {
         void OnExit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         bool selectingAngle;
-        double v, t, g;
+        motionFactory* motionF;
 };

@@ -1,10 +1,3 @@
-/*!
- @file Header file for ballistics.f90
-*/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  @brief Gets the Angle one needs to shoot a projectile to hit a target
@@ -33,7 +26,3 @@ double getRange(const double* velocity, const double* g, const double* theta);
  @param x The x coordinate of the projectile
 */
 double getHeight(const double* velocity, const double* g, const double* theta, const double* x);
-
-#ifdef __cplusplus
-}
-#endif
