@@ -6,6 +6,8 @@ extern (C) { //horrible hack to get over a lack of a macroprocessor in D
 
 import core.runtime;
 import std.math;
+import core.stdc.stdlib;
+import std.conv : emplace;
 
 bool runtimeInitialized = false;
 
@@ -22,6 +24,10 @@ extern (C++){
             this(double velocity, double gravity, double x, double y){
                 this(velocity, gravity, getAngle(&velocity, &gravity, &x, &y));
             }
+            this(double velocity, double gravity, long range){
+                double rangeD = cast(double)range;
+                this(velocity, gravity, shallowAngleOfReach(&velocity, &gravity, &rangeD));
+            }
             double getVelocity() const{
                 return velocity;
             }
@@ -33,6 +39,9 @@ extern (C++){
             }
             double getCurrentRange() const{
                 return getRange(&velocity, &gravity, &angle);
+            }
+            double getPeakHeight() const{
+                return getMaxHeight(&velocity, &gravity);
             }
             double getCurrentAngle() const{
                 return this.angle;
@@ -47,16 +56,19 @@ extern (C++){
                 }
                 this.angle = newAngle;
             }
+            void setAngle(long range){
+                double rangeD = cast(double)range;
+                this.angle = shallowAngleOfReach(&velocity, &gravity, &rangeD);
+            }
             double getY(double x) const{
                 return getHeight(&velocity, &gravity, &angle, &x);
             }
             motion getMotion(double step) const{
-                //FIXME hack it even more by allocating the memory in C? ASSEMBLY PERHAPS?!??!?!!
-                if(!runtimeInitialized){ //horrible hack to get over the fact that D needs to be initialized before allocating any memory
-                    runtimeInitialized = true;
-                    Runtime.initialize();
-                }
-                return new motion(velocity, gravity, angle, step);
+                auto size = __traits(classInstanceSize, motion);
+                motion ptr = cast(motion)malloc(size);
+                //FIXME this hack causes a segfault, class function pointer missing for inherited class?
+                ptr.__ctor(velocity, gravity, angle, step);
+                return ptr;
             }
         private:
             double velocity;
@@ -70,7 +82,7 @@ extern (C++){
                 super(velocity, gravity, angle);
                 this.current = 0;
                 this.step = step;
-                this.range = getRange(&velocity, &gravity, &angle);
+                this.range = getCurrentRange();
             }
             this(double velocity, double gravity, double x, double y, double step){
                 this(velocity, gravity, getAngle(&velocity, &gravity, &x, &y), step);

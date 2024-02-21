@@ -219,6 +219,7 @@ void mainFrame::regraph(){
         p.Blue() = 0;
         p.OffsetY(data, -y);
     }
+    free(thisMotion);
     graphPanel->SetBitmap(*graph);
 }
 

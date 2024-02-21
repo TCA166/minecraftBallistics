@@ -28,4 +28,18 @@ real(c_double) function getHeight(v, g, angle, x) bind(C, name="getHeight")
     getHeight = height
 end function getHeight
 
+real(c_double) function getMaxHeight(v, g) bind(C, name="getMaxHeight")
+    real(c_double), intent(in) :: v, g
+    real(c_double) :: height
+    height = v**2 / 2 * g
+    getMaxHeight = height
+end function getMaxHeight
+
+real(c_double) function shallowAngleOfReach(v, g, d) bind(C, name="shallowAngleOfReach")
+    real(c_double), intent(in) :: v, g, d
+    real(c_double) :: angle
+    angle = asin((g * d) / v**2) / 2
+    shallowAngleOfReach = angle
+end function shallowAngleOfReach
+
 end module ballisticsMath
