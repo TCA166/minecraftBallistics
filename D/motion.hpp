@@ -1,6 +1,15 @@
+/*!
+ @defgroup motion motion
+ @brief Object interface for projectile motion
+ @details Object oriented interface for calculating the position of a projectile at a given time
+*/
 
 class motion;
 
+/*!
+ @brief A factory class for creating motion instances and storing physical properties of a projectile
+ @addtogroup motion
+*/
 class motionFactory {
     public:
         motionFactory(double velocity, double gravity, double angle);
@@ -56,6 +65,7 @@ class motionFactory {
         /*!
          @brief Creates a motion instance based on the current state
          @param step the step size of the motion
+         @note the caller is responsible for freeing the returned instance using libc's free
          @return a motion instance based on the current state
         */
         motion* getMotion(double step) const;
@@ -66,6 +76,10 @@ class motionFactory {
         double dummy;
 };
 
+/*!
+ @brief A class for calculating the position of a projectile at a given time
+ @addtogroup motion
+*/
 class motion : public motionFactory{
     public:
         motion(double velocity, double gravity, double angle, double step);

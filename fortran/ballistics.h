@@ -1,3 +1,8 @@
+/*!
+ @defgroup ballistics Ballistics
+ @brief Functions for calculating the trajectory of a projectile
+ @details Functional interface for Fortran module `ballistics`
+*/
 
 /*!
  @brief Gets the Angle one needs to shoot a projectile to hit a target
@@ -6,6 +11,7 @@
  @param x The x coordinate of the target
  @param y The y coordinate of the target
  @return The angle in radians, or -NaN if the result is impossible
+ @addtogroup ballistics
 */
 double getAngle(const double* velocity, const double* g, const double* x, const double* y);
 
@@ -15,6 +21,7 @@ double getAngle(const double* velocity, const double* g, const double* x, const 
  @param g The acceleration due to gravity
  @param theta The angle of the projectile
  @return The range of the projectile
+ @addtogroup ballistics
 */
 double getRange(const double* velocity, const double* g, const double* theta);
 
@@ -25,6 +32,7 @@ double getRange(const double* velocity, const double* g, const double* theta);
  @param theta The angle of the projectile
  @param x The x coordinate of the projectile
  @return The height of the projectile
+ @addtogroup ballistics
 */
 double getHeight(const double* velocity, const double* g, const double* theta, const double* x);
 
@@ -33,6 +41,7 @@ double getHeight(const double* velocity, const double* g, const double* theta, c
  @param velocity The velocity of the projectile
  @param g The acceleration due to gravity
  @return The maximum height of the projectile
+ @addtogroup ballistics
 */
 double getMaxHeight(const double* velocity, const double* g);
 
@@ -42,5 +51,6 @@ double getMaxHeight(const double* velocity, const double* g);
  @param g The acceleration due to gravity
  @param distance The distance to the target
  @return The angle in radians, or -NaN if the result is impossible
+ @addtogroup ballistics
 */
 double shallowAngleOfReach(const double* velocity, const double* g, const double* distance);

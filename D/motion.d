@@ -4,9 +4,8 @@ extern (C) { //horrible hack to get over a lack of a macroprocessor in D
     mixin(import("ballistics.h"));
 }
 
-import core.runtime;
-import std.math;
-import core.stdc.stdlib;
+import std.math : isNaN;
+import core.stdc.stdlib : malloc;
 import std.conv : emplace;
 
 bool runtimeInitialized = false;
@@ -14,6 +13,7 @@ bool runtimeInitialized = false;
 //https://dlang.org/spec/cpp_interface.html#using_d_classes_from_cpp
 
 extern (C++){
+    @nogc
     class motionFactory{
         public:
             this(double velocity, double gravity, double angle){
@@ -64,11 +64,15 @@ extern (C++){
                 return getHeight(&velocity, &gravity, &angle, &x);
             }
             motion getMotion(double step) const{
-                auto size = __traits(classInstanceSize, motion);
-                motion ptr = cast(motion)malloc(size);
-                //FIXME this hack causes a segfault, class function pointer missing for inherited class?
-                ptr.__ctor(velocity, gravity, angle, step);
-                return ptr;
+                /*
+                D for all it's good points has a terrible allocator (suposedly) that is very slow (suposedly).
+                Additionally the allocator needs to be initialized because it utilizes GC.
+                Now we don't really do that, and GC is something we neither want nor use.
+                So we go around it by using the C allocator, with all that entails.
+                */
+                size_t size = __traits(classInstanceSize, motion);
+                void[] ptr = malloc(size)[0..size];
+                return emplace!motion(ptr, velocity, gravity, angle, step);
             }
         private:
             double velocity;
@@ -82,7 +86,7 @@ extern (C++){
                 super(velocity, gravity, angle);
                 this.current = 0;
                 this.step = step;
-                this.range = getCurrentRange();
+                this.range = this.getCurrentRange();
             }
             this(double velocity, double gravity, double x, double y, double step){
                 this(velocity, gravity, getAngle(&velocity, &gravity, &x, &y), step);
