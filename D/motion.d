@@ -13,7 +13,6 @@ bool runtimeInitialized = false;
 //https://dlang.org/spec/cpp_interface.html#using_d_classes_from_cpp
 
 extern (C++){
-    @nogc
     class motionFactory{
         public:
             this(double velocity, double gravity, double angle){

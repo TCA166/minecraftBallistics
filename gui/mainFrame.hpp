@@ -1,6 +1,6 @@
 #include <wx/wx.h>
 
-#include "../D/motion.hpp"
+#include "motionGraph.hpp"
 
 class mainFrame : public wxFrame {
     public:
@@ -12,7 +12,6 @@ class mainFrame : public wxFrame {
 		wxSlider* velocitySlider;
         wxStaticText* angleText;
 		wxSlider* angleSlider;
-        wxBitmap* graph;
         wxStaticBitmap* graphPanel;
         /*!
          @brief Regraphs the bitmap graph
@@ -31,5 +30,5 @@ class mainFrame : public wxFrame {
         void OnExit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         bool selectingAngle;
-        motionFactory* motionF;
+        motionGraph* graph;
 };

@@ -13,7 +13,7 @@ const uint8_t midGray = 128;
 const uint8_t lightGray = 64;
 
 mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics calculator") {
-    motionF = new motionFactory(maxArrowVelocity, minecraftGravity, 0.90);
+    new motionFactory(maxArrowVelocity, minecraftGravity, 0.90);
     selectingAngle = false;
     this->SetSize(wxSize(800, 500));
     {//create and initialize file menu
@@ -63,7 +63,7 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         angleSlider = new wxSlider(this, wxID_ANY, 45, 0, 180, wxDefaultPosition, controlSize, wxSL_HORIZONTAL|wxSL_LABELS|wxSL_MIN_MAX_LABELS);
         bSizer7->Add(angleSlider, 0, wxALL, border);
 
-        graph = new wxBitmap(m_width - controlSize.x - (border * 4), m_height - (border * 12));
+        graph = new motionGraph(maxArrowVelocity, minecraftGravity, 0.9, m_width - controlSize.x - (border * 4), m_height - (border * 12));
         graphPanel = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize(m_width - controlSize.x - (border * 4), m_height - (border * 12)), 0);
         regraph();
 
@@ -120,13 +120,13 @@ mainFrame::~mainFrame(){
 }
 
 void mainFrame::setAngle(double angle){
-    motionF->setAngle(angle);
+    graph->setAngle(angle);
     angleSlider->SetValue((int)(angle * 100));
     regraph();
 }
 
 void mainFrame::setVelocity(double velocity){
-    motionF->setVelocity(velocity);
+    graph->setVelocity(velocity);
     velocitySlider->SetValue((int)velocity);
     regraph();
 }
@@ -148,13 +148,13 @@ void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
     double y = (graph->GetHeight() - event.GetY()) / graphScale;
     unsetAngleSelect();
     try{
-        motionF->setAngle(x, y);
+        graph->setAngle(x, y);
     }
     catch(...){
         SetStatusText("Invalid position");        
         return;
     }
-    angleSlider->SetValue((int)(motionF->getCurrentAngle() * 100));
+    angleSlider->SetValue((int)(graph->getCurrentAngle() * 100));
     regraph();
 }
 
@@ -173,53 +173,16 @@ void mainFrame::mainFrameOnSize(wxSizeEvent& event){
 }
 
 void mainFrame::velocitySliderOnScroll(wxScrollEvent& event){
-    motionF->setVelocity(velocitySlider->GetValue());
+    graph->setVelocity(velocitySlider->GetValue());
     regraph();
 }
 
 void mainFrame::angleSliderOnScroll(wxScrollEvent& event) {
-    motionF->setAngle((double)angleSlider->GetValue() / 100.0);
+    graph->setAngle((double)angleSlider->GetValue() / 100.0);
     regraph();
 }
 
 void mainFrame::regraph(){
-    //get the pixel iterator
-    wxNativePixelData data = wxNativePixelData(*graph);
-    wxNativePixelData::Iterator p(data);
-    for(long y = graph->GetHeight(); y > 0; y--){ //foreach row from top to bottom
-        wxNativePixelData::Iterator rowStart = p;
-        uint8_t r = lightGray, g = lightGray, b = lightGray; //pixel will be light gray
-        if(y % (graphScale * tickSize) == 0){ //unless the row is one in twenty
-            r = midGray;
-            g = midGray;
-            b = midGray;
-        }
-        for(long x = 0; x < graph->GetWidth(); x++, p++){
-            if(x % (graphScale * tickSize) == 0){ //or column is one in twenty
-                p.Red() = midGray;
-                p.Green() = midGray;
-                p.Blue() = midGray;
-            }
-            else{ //set the pixel color
-                p.Red() = r;
-                p.Green() = g;
-                p.Blue() = b;
-            }
-        }
-        p = rowStart;
-        p.OffsetY(data, 1);
-    }
-    motion* thisMotion = motionF->getMotion(1.0 / (float)graphScale);
-    p = wxNativePixelData::Iterator(data);
-    for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++){
-        double y = graph->GetHeight() - (val * graphScale);
-        p.OffsetY(data, y);
-        p.Red() = 255;
-        p.Green() = 0;
-        p.Blue() = 0;
-        p.OffsetY(data, -y);
-    }
-    free(thisMotion);
     graphPanel->SetBitmap(*graph);
 }
 

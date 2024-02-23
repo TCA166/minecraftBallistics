@@ -17,12 +17,17 @@ wxFlags := -I/usr/lib/x86_64-linux-gnu/wx/include/gtk3-unicode-3.0 -I/usr/includ
 mainFrame.o: gui/mainFrame.cpp
 	g++ -c gui/mainFrame.cpp -o mainFrame.o $(CFLAGS) $(wxFlags)
 
-#lgphobos is the D standard library. It might be called libphobos2.so in some systems
-guiCalculator: motion.o ballistics.o gui/main.cpp mainFrame.o
-	g++ gui/main.cpp motion.o ballistics.o mainFrame.o -o guiCalculator -lgphobos -lm $(CFLAGS) $(wxFlags)
+motionGraph.o: gui/motionGraph.cpp
+	g++ -c gui/motionGraph.cpp -o motionGraph.o $(CFLAGS) $(wxFlags)
 
-motion.o: D/motion.d 
-	gdc -c D/motion.d -o motion.o $(CFLAGS) -J fortran
+guiCalculator: motionGraph.o motion.o gui/main.cpp mainFrame.o
+	g++ gui/main.cpp motionGraph.o motion.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
+
+#lgphobos is the D standard library. It might be called libphobos2.so in some systems
+PHOBOS := gphobos
+#we link it here with motion.o, because it is required by D code, and we don't use D anywhere else
+motion.o: D/motion.d ballistics.o
+	gdc -r D/motion.d ballistics.o -o motion.o $(CFLAGS) -l$(PHOBOS) -J fortran
 
 clean:
 	rm -f *.o consoleCalculator *.mod
