@@ -1,9 +1,13 @@
 #include "motionGraph.hpp"
 #include <wx/rawbmp.h>
+/*
+Here's what happens.
+D doesn't have multi inheritance as a feature, so it doesn't generate constructors for it.
+However C++ expects to have different constructors for different multi inheritance cases. In our case it's looking for motionFactoryC2 while D doesn't create one because it has no clue wtf is multi inheritance.
+So we need to do D's job for it in a linker script
+*/
 
-//FIXME compile time error: cannot find the motionFactory constructor
 motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height) : wxBitmap(width, height), motionFactory(velocity, gravity, angle){
-    new motionFactory(velocity, gravity, angle);
     reScale();
 }
 
@@ -50,10 +54,22 @@ void motionGraph::reScale(){
     regraph();
 }
 
-void motionGraph::setAngle(...){
-    reScale();
+void motionGraph::setAngle(double angle){
+    motionFactory::setAngle(angle);
+    regraph();
 }
 
-void motionGraph::setVelocity(...){
-    reScale();
+void motionGraph::setAngle(double x, double y){
+    motionFactory::setAngle(x, y);
+    regraph();
+}
+
+void motionGraph::setAngle(long range){
+    motionFactory::setAngle(range);
+    regraph();
+}
+
+void motionGraph::setVelocity(double velocity){
+    motionFactory::setVelocity(velocity);
+    regraph();
 }

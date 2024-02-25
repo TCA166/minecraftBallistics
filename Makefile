@@ -17,17 +17,17 @@ wxFlags := -I/usr/lib/x86_64-linux-gnu/wx/include/gtk3-unicode-3.0 -I/usr/includ
 mainFrame.o: gui/mainFrame.cpp
 	g++ -c gui/mainFrame.cpp -o mainFrame.o $(CFLAGS) $(wxFlags)
 
-motionGraph.o: gui/motionGraph.cpp
-	g++ -c gui/motionGraph.cpp -o motionGraph.o $(CFLAGS) $(wxFlags)
+motionGraph.o: gui/motionGraph.cpp motion.o D/mi.ld
+	g++ -c gui/motionGraph.cpp -o motionG.o $(CFLAGS) $(wxFlags)
+#we link using a custom link script to go around D's lack of multi inheritance support
+	ld -r motion.o D/mi.ld motionG.o -o motionGraph.o
 
-guiCalculator: motionGraph.o motion.o gui/main.cpp mainFrame.o
-	g++ gui/main.cpp motionGraph.o motion.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
+guiCalculator: motionGraph.o gui/main.cpp mainFrame.o
+	g++ gui/main.cpp motionGraph.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
 
-#lgphobos is the D standard library. It might be called libphobos2.so in some systems
-PHOBOS := gphobos
 #we link it here with motion.o, because it is required by D code, and we don't use D anywhere else
 motion.o: D/motion.d ballistics.o
-	gdc -r D/motion.d ballistics.o -o motion.o $(CFLAGS) -l$(PHOBOS) -J fortran
+	gdc -r D/motion.d ballistics.o -o motion.o $(CFLAGS) -static-libphobos -J fortran
 
 clean:
 	rm -f *.o consoleCalculator *.mod
