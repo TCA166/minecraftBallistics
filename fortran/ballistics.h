@@ -40,10 +40,11 @@ double getHeight(const double* velocity, const double* g, const double* theta, c
  @brief Gets the maximum height of a projectile
  @param velocity The velocity of the projectile
  @param g The acceleration due to gravity
+ @param theta The angle of the projectile
  @return The maximum height of the projectile
  @addtogroup ballistics
 */
-double getMaxHeight(const double* velocity, const double* g);
+double getMaxHeight(const double* velocity, const double* g, const double* theta);
 
 /*!
  @brief Calculates the shallow angle of reach

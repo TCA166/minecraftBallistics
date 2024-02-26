@@ -40,7 +40,7 @@ extern (C++){
                 return getRange(&velocity, &gravity, &angle);
             }
             double getPeakHeight() const{
-                return getMaxHeight(&velocity, &gravity);
+                return getMaxHeight(&velocity, &gravity, &angle);
             }
             double getCurrentAngle() const{
                 return this.angle;
@@ -100,6 +100,9 @@ extern (C++){
             }
             double length(){
                 return (range - current) / step;
+            }
+            double getOffset() const{
+                return current;
             }
         private:
             double current;

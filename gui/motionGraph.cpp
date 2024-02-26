@@ -17,11 +17,12 @@ void motionGraph::regraph(){
     for(long y = this->GetHeight(); y > 0; y--){ //foreach row from top to bottom
         wxNativePixelData::Iterator rowStart = p;
         wxColour r = background; //pixel will be background color
-        if(y % (scale * tickSize) == 0){ //unless the row is one in twenty
+        int tickScaled = (int)(scale * tickSize);
+        if(y % tickScaled == 0){ //unless the row is one in twenty
             r = accent;
         }
         for(long x = 0; x < this->GetWidth(); x++, p++){
-            if(x % (scale * tickSize) == 0){ //or column is one in twenty
+            if(x % tickScaled == 0){ //or column is one in twenty
                 p.Red() = accent.Red();
                 p.Green() = accent.Green();
                 p.Blue() = accent.Blue();
@@ -49,8 +50,7 @@ void motionGraph::regraph(){
 }
 
 void motionGraph::reScale(){
-    double range = getCurrentRange();
-    scale = this->GetWidth() / range;
+    scale = this->GetWidth() / this->getCurrentRange();
     regraph();
 }
 
@@ -72,4 +72,8 @@ void motionGraph::setAngle(long range){
 void motionGraph::setVelocity(double velocity){
     motionFactory::setVelocity(velocity);
     regraph();
+}
+
+double motionGraph::getScale() const{
+    return scale;
 }

@@ -28,10 +28,10 @@ real(c_double) function getHeight(v, g, angle, x) bind(C, name="getHeight")
     getHeight = height
 end function getHeight
 
-real(c_double) function getMaxHeight(v, g) bind(C, name="getMaxHeight")
-    real(c_double), intent(in) :: v, g
+real(c_double) function getMaxHeight(v, g, angle) bind(C, name="getMaxHeight")
+    real(c_double), intent(in) :: v, g, angle
     real(c_double) :: height
-    height = v**2 / 2 * g
+    height = (v**2 * sin(angle)**2) / (2 * g)
     getMaxHeight = height
 end function getMaxHeight
 

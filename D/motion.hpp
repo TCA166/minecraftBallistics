@@ -36,6 +36,11 @@ class motionFactory {
         */
         double getCurrentRange() const;
         /*!
+         @brief Get the peak height of the projectile
+         @return the peak height of the projectile
+        */
+        double getPeakHeight() const;
+        /*!
          @brief Get the angle of the projectile
          @return the angle of the projectile
         */
@@ -84,9 +89,26 @@ class motion : public motionFactory{
     public:
         motion(double velocity, double gravity, double angle, double step);
         motion(double velocity, double gravity, double x, double y, double step);
+        /*!
+         @brief Checks if the motion has reached the end
+         @return true if the motion has reached the end
+        */
         bool empty() const;
+        /*!
+         @brief Gets the next y coordinate of the projectile
+         @return the next y coordinate of the projectile
+        */
         double next();
+        /*!
+         @brief Gets the amount of data points in the motion
+         @return the length of the motion in data points
+        */
         double length() const;
+        /*!
+         @brief Gets the current offset of the motion
+         @return the current offset of the motion
+        */
+        double getOffset() const;
     private:
         double current;
         const double step;

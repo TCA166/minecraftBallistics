@@ -13,7 +13,6 @@ const uint8_t midGray = 128;
 const uint8_t lightGray = 64;
 
 mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics calculator") {
-    new motionFactory(maxArrowVelocity, minecraftGravity, 0.90);
     selectingAngle = false;
     this->SetSize(wxSize(800, 500));
     {//create and initialize file menu
@@ -60,7 +59,7 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         angleText->Wrap(-1);
         bSizer7->Add(angleText, 0, wxALL, border);
 
-        angleSlider = new wxSlider(this, wxID_ANY, 45, 0, 180, wxDefaultPosition, controlSize, wxSL_HORIZONTAL|wxSL_LABELS|wxSL_MIN_MAX_LABELS);
+        angleSlider = new wxSlider(this, wxID_ANY, 90, 0, 180, wxDefaultPosition, controlSize, wxSL_HORIZONTAL|wxSL_LABELS|wxSL_MIN_MAX_LABELS);
         bSizer7->Add(angleSlider, 0, wxALL, border);
 
         graph = new motionGraph(maxArrowVelocity, minecraftGravity, 0.9, m_width - controlSize.x - (border * 4), m_height - (border * 12));
@@ -144,8 +143,8 @@ void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
     if(!selectingAngle){
         return;
     }
-    double x = event.GetX() / graphScale;
-    double y = (graph->GetHeight() - event.GetY()) / graphScale;
+    double x = event.GetX() / graph->getScale();
+    double y = (graph->GetHeight() - event.GetY()) / graph->getScale();
     unsetAngleSelect();
     try{
         graph->setAngle(x, y);
