@@ -1,9 +1,14 @@
 #include <wx/wx.h>
 
-#include "guiCalculator.hpp"
 #include "mainFrame.hpp"
 
 //https://docs.wxwidgets.org/3.2/page_topics.html
+
+class app : public wxApp {
+    public:
+        virtual bool OnInit();
+        ~app() = default;
+};
 
 wxIMPLEMENT_APP(app);
 

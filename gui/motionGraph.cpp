@@ -1,5 +1,6 @@
 #include "motionGraph.hpp"
 #include <wx/rawbmp.h>
+
 /*
 Here's what happens.
 D doesn't have multi inheritance as a feature, so it doesn't generate constructors for it.
@@ -7,8 +8,14 @@ However C++ expects to have different constructors for different multi inheritan
 So we need to do D's job for it in a linker script
 */
 
-motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height) : wxBitmap(width, height), motionFactory(velocity, gravity, angle){
+motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height) : motionGraph(velocity, gravity, angle, width, height, 3, true){
+
+}
+
+motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height, uint8_t lineWidth, bool reSize) : wxBitmap(width, height), motionFactory(velocity, gravity, angle){
+    this->lineWidth = lineWidth;
     reScale();
+    this->reSize = reSize;
 }
 
 void motionGraph::regraph(){
@@ -38,42 +45,61 @@ void motionGraph::regraph(){
     }
     motion* thisMotion = this->getMotion(1.0 / (float)scale);
     p = wxNativePixelData::Iterator(data);
+    unsigned int prevY = 0;
     for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++){
-        double y = this->GetHeight() - (val * scale);
+        unsigned int y = this->GetHeight() - (val * scale) - (lineWidth / 2);
         p.OffsetY(data, y);
-        p.Red() = 255;
-        p.Green() = 0;
-        p.Blue() = 0;
-        p.OffsetY(data, -y);
+        uint8_t i = 0;
+        //TODO add interpolation
+        while(i < lineWidth && y + i < this->GetHeight()){
+            p.Red() = 255;
+            p.Green() = 0;
+            p.Blue() = 0;
+            p.OffsetY(data, 1);
+            i++;
+        }
+        p.OffsetY(data, -y - i);
+        prevY = y;
     }
     free(thisMotion);
 }
 
 void motionGraph::reScale(){
-    scale = this->GetWidth() / this->getCurrentRange();
+    if(reSize){
+        double scale = this->GetWidth() / (this->getCurrentRange() * 1.1);
+        if(scale * this->getPeakHeight() * 1.1 > this->GetHeight()){
+            scale = this->GetHeight() / (this->getPeakHeight() * 1.1);
+        }
+        this->scale = scale;
+    }
     regraph();
 }
 
 void motionGraph::setAngle(double angle){
     motionFactory::setAngle(angle);
-    regraph();
+    reScale();
 }
 
 void motionGraph::setAngle(double x, double y){
     motionFactory::setAngle(x, y);
-    regraph();
+    reScale();
 }
 
 void motionGraph::setAngle(long range){
     motionFactory::setAngle(range);
-    regraph();
+    reScale();
 }
 
 void motionGraph::setVelocity(double velocity){
     motionFactory::setVelocity(velocity);
-    regraph();
+    reScale();
 }
 
 double motionGraph::getScale() const{
     return scale;
+}
+
+void motionGraph::setReSize(bool reSize){
+    reScale();
+    this->reSize = reSize;
 }

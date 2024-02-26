@@ -42,4 +42,8 @@ real(c_double) function shallowAngleOfReach(v, g, d) bind(C, name="shallowAngleO
     shallowAngleOfReach = angle
 end function shallowAngleOfReach
 
+!!TODO add function for calculating optimal angle for coordinate
+
+!!TODO add function for calculating velocity for set angle and position
+
 end module ballisticsMath

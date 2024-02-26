@@ -1,20 +1,20 @@
 #include <wx/wx.h>
 #include <wx/rawbmp.h>
 
+#include <exception>
+
 #include "mainFrame.hpp"
-#include "guiCalculator.hpp"
 #include "../constants.h"
 
 const wxSize controlSize = wxSize(200, -1);
 const int border = 5;
-const unsigned int graphScale = 3;
 const unsigned int tickSize = 10;
 const uint8_t midGray = 128;
 const uint8_t lightGray = 64;
 
 mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics calculator") {
     selectingAngle = false;
-    this->SetSize(wxSize(800, 500));
+    this->SetSize(wxSize(1000, 600));
     {//create and initialize file menu
         wxMenu *menuFile = new wxMenu;
         menuFile->Append(wxID_EXIT);
@@ -59,11 +59,11 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         angleText->Wrap(-1);
         bSizer7->Add(angleText, 0, wxALL, border);
 
-        angleSlider = new wxSlider(this, wxID_ANY, 90, 0, 180, wxDefaultPosition, controlSize, wxSL_HORIZONTAL|wxSL_LABELS|wxSL_MIN_MAX_LABELS);
+        angleSlider = new wxSlider(this, wxID_ANY, 90, 5, 155, wxDefaultPosition, controlSize, wxSL_HORIZONTAL|wxSL_LABELS|wxSL_MIN_MAX_LABELS);
         bSizer7->Add(angleSlider, 0, wxALL, border);
 
         graph = new motionGraph(maxArrowVelocity, minecraftGravity, 0.9, m_width - controlSize.x - (border * 4), m_height - (border * 12));
-        graphPanel = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize(m_width - controlSize.x - (border * 4), m_height - (border * 12)), 0);
+        graphPanel = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize(graph->GetWidth(), graph->GetHeight()), 0);
         regraph();
 
         fgSizer3->Add(bSizer7, 1, wxEXPAND, border);
@@ -149,7 +149,7 @@ void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
     try{
         graph->setAngle(x, y);
     }
-    catch(...){
+    catch(std::exception& e){
         SetStatusText("Invalid position");        
         return;
     }

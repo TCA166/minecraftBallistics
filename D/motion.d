@@ -10,6 +10,12 @@ import std.conv : emplace;
 
 bool runtimeInitialized = false;
 
+Exception newException(string message){
+    size_t size = __traits(classInstanceSize, Exception);
+    void[] ptr = malloc(size)[0..size];
+    return emplace!Exception(ptr, message);
+}
+
 //https://dlang.org/spec/cpp_interface.html#using_d_classes_from_cpp
 
 extern (C++){
@@ -51,7 +57,7 @@ extern (C++){
             void setAngle(double x, double y){
                 double newAngle = getAngle(&velocity, &gravity, &x, &y);
                 if(isNaN(newAngle)){
-                    throw new Exception("Invalid position");
+                    throw newException("The given point is unreachable");
                 }
                 this.angle = newAngle;
             }

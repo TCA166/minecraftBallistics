@@ -18,6 +18,17 @@ class motionGraph : public wxBitmap, public motionFactory{
          @param angle the angle of the projectile
          @param width the width of the graph
          @param height the height of the graph
+         @param lineWidth the width of the projectile line
+         @param reSize whether or not to resize the graph after initialization
+        */
+        motionGraph(double velocity, double gravity, double angle, int width, int height, uint8_t lineWidth, bool reSize);
+        /*!
+         @brief Creates a motion graph using default cosmetic settings
+         @param velocity the starting velocity of the projectile
+         @param gravity the gravity acting upon the projectile
+         @param angle the angle of the projectile
+         @param width the width of the graph
+         @param height the height of the graph
         */
         motionGraph(double velocity, double gravity, double angle, int width, int height);
         /*!
@@ -46,11 +57,14 @@ class motionGraph : public wxBitmap, public motionFactory{
          @return the scale of the graph
         */
         double getScale() const;
+        void setReSize(bool reSize);
     private:
         wxColour background = wxColour(64, 64, 64);
         wxColour accent = wxColour(128, 128, 128);
         uint8_t tickSize = 10;
+        uint8_t lineWidth = 1;
         double scale;
+        bool reSize = true;
         void reScale();
         void regraph();
 };

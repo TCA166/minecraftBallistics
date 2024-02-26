@@ -20,6 +20,7 @@ int main(int argc, char** argv){
     }
     else if(argc > 3){
         v = atof(argv[3]);
+        //TODO handle additional arguments. Definetly want to incorporate a csv dump function
     }
     else{ //argc == 3
         v = maxArrowVelocity;
