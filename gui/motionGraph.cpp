@@ -103,3 +103,8 @@ void motionGraph::setReSize(bool reSize){
     reScale();
     this->reSize = reSize;
 }
+
+void motionGraph::setOptimal(double x, double y){
+    motionFactory::setOptimal(x, y);
+    reScale();
+}

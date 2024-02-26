@@ -42,7 +42,12 @@ real(c_double) function shallowAngleOfReach(v, g, d) bind(C, name="shallowAngleO
     shallowAngleOfReach = angle
 end function shallowAngleOfReach
 
-!!TODO add function for calculating optimal angle for coordinate
+real(c_double) function lowestVelocity(g, x, y) bind(C, name="lowestVelocity")
+    real(c_double), intent(in) :: g, x, y
+    real(c_double) :: v
+    v = sqrt(g * (y + sqrt(y**2 + x**2)))
+    lowestVelocity = v
+end function lowestVelocity
 
 !!TODO add function for calculating velocity for set angle and position
 

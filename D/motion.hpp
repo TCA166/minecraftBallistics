@@ -26,6 +26,12 @@ class motionFactory {
         */
         void setVelocity(double velocity);
         /*!
+         @brief Sets the optimal velocity and angle to reach a target
+         @param x the x coordinate of the target
+         @param y the y coordinate of the target
+        */
+        void setOptimal(double x, double y);
+        /*!
          @brief Get the gravity acting upon of the projectile
          @return the gravity
         */

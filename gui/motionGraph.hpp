@@ -57,6 +57,7 @@ class motionGraph : public wxBitmap, public motionFactory{
          @return the scale of the graph
         */
         double getScale() const;
+        void setOptimal(double x, double y);
         void setReSize(bool reSize);
     private:
         wxColour background = wxColour(64, 64, 64);

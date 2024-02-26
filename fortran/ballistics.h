@@ -55,3 +55,12 @@ double getMaxHeight(const double* velocity, const double* g, const double* theta
  @addtogroup ballistics
 */
 double shallowAngleOfReach(const double* velocity, const double* g, const double* distance);
+
+/*!
+ @brief Calculates the lowest velocity needed to hit a target
+ @param g the acceleration due to gravity
+ @param x the x coordinate of the target
+ @param y the y coordinate of the target
+ @return The lowest velocity needed to hit the target
+*/
+double lowestVelocity(const double* g, const double* x, const double* y);

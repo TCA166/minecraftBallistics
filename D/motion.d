@@ -39,6 +39,18 @@ extern (C++){
             void setVelocity(double velocity){
                 this.velocity = velocity;
             }
+            void setOptimal(double x, double y){
+                double newVelocity = lowestVelocity(&gravity, &x, &y);
+                if(isNaN(newVelocity)){
+                    throw newException("The given point is unreachable");
+                }
+                this.velocity = newVelocity;
+                double newAngle = getAngle(&velocity, &gravity, &x, &y);
+                if(isNaN(newAngle)){
+                    throw newException("The given point is unreachable");
+                }
+                this.angle = newAngle;
+            }
             double getGravity() const{
                 return gravity;
             }
