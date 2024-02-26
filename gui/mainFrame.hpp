@@ -29,6 +29,7 @@ class mainFrame : public wxFrame {
 		virtual void angleSliderOnScroll(wxScrollEvent& event);
         virtual void graphPanelOnLeftDown(wxMouseEvent& event);
         virtual void mainFrameOnLeftUp(wxMouseEvent& event);
+        virtual void resizeCheckOnCheckBox(wxCommandEvent& event);
         virtual void unsetAngleSelect();
         void setAngle(double angle);
         void setVelocity(double velocity);

@@ -46,7 +46,8 @@ void motionGraph::regraph(){
     motion* thisMotion = this->getMotion(1.0 / (float)scale);
     p = wxNativePixelData::Iterator(data);
     unsigned int prevY = 0;
-    for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++){
+    unsigned short colNum = 0;
+    for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++, colNum++){
         unsigned int y = this->GetHeight() - (val * scale) - (lineWidth / 2);
         p.OffsetY(data, y);
         uint8_t i = 0;
@@ -60,6 +61,9 @@ void motionGraph::regraph(){
         }
         p.OffsetY(data, -y - i);
         prevY = y;
+        if(colNum > this->GetWidth()){
+            break;
+        }
     }
     free(thisMotion);
 }

@@ -105,6 +105,7 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         angleSlider->Connect(wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler(mainFrame::angleSliderOnScroll), NULL, this);
         angleSlider->Connect(wxEVT_SCROLL_CHANGED, wxScrollEventHandler(mainFrame::angleSliderOnScroll), NULL, this);
         graphPanel->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(mainFrame::graphPanelOnLeftDown), NULL, this);
+        resizeCheck->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(mainFrame::resizeCheckOnCheckBox), NULL, this);
         this->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(mainFrame::mainFrameOnLeftUp), NULL, this);
         //Menu events
         Bind(wxEVT_MENU, &mainFrame::OnAbout, this, wxID_ABOUT);
@@ -201,6 +202,10 @@ void mainFrame::velocitySliderOnScroll(wxScrollEvent& event){
 void mainFrame::angleSliderOnScroll(wxScrollEvent& event) {
     graph->setAngle((double)angleSlider->GetValue() / 100.0);
     regraph();
+}
+
+void mainFrame::resizeCheckOnCheckBox(wxCommandEvent& event){
+    graph->setReSize(resizeCheck->IsChecked());
 }
 
 void mainFrame::regraph(){
