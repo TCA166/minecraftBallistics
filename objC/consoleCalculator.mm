@@ -1,10 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
+//We don't have access to the weird apple/nextstep/gnustep environment so we use the standard C library :)
+#import <stdlib.h>
+#import <stdio.h>
 
-#include "fortran/ballistics.h"
-#include "constants.h"
+#import "../D/motion.hpp"
 
-int main(int argc, char** argv){
+#import "../constants.h"
+
+int main(int argc, const char * argv[]){
     double v, x, g, y;
     g = minecraftGravity;
     if(argc < 2){ //help case
@@ -14,8 +16,9 @@ int main(int argc, char** argv){
     else if(argc == 2){ //we check max range for velocity
         v = atof(argv[1]);
         double angle = 0.90;
-        double distance = getRange(&v, &g, &angle);
-        printf("The distance is %f\n", distance);
+        motionFactory* mf = new motionFactory(v, g, angle);
+        double range = mf->getCurrentRange();
+        printf("Max range for velocity %f is %f\n", v, range);
         return EXIT_SUCCESS;
     }
     else if(argc > 3){
@@ -27,9 +30,10 @@ int main(int argc, char** argv){
     }
     x = atof(argv[1]);
     y = atof(argv[2]);
-    double angle = getAngle(&v, &g, &x, &y);
+    motionFactory* mf = new motionFactory(v, g, x, y);
+    double angle = mf->getCurrentAngle();
     printf("The angle is %f", angle);
-    double distance = getRange(&v, &g, &angle);
+    double distance = mf->getCurrentRange();
     printf(" and the maximum distance is %f\n", distance);
     return 0;
 }

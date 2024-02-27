@@ -9,8 +9,8 @@ all: consoleCalculator guiCalculator
 ballistics.o: fortran/ballistics.f90
 	gfortran -c fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
 
-consoleCalculator: ballistics.o consoleCalculator.c
-	gcc consoleCalculator.c ballistics.o -o consoleCalculator -lm $(CFLAGS)
+consoleCalculator: motion.o objC/consoleCalculator.mm
+	g++ objC/consoleCalculator.mm motion.o -o consoleCalculator -lm $(CFLAGS)
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
@@ -46,5 +46,7 @@ requirementsDNF:
 	sudo dnf install wxGTK-devel
 	sudo dnf install gdc
 	sudo dnf install libgphobos-static
+	sudo dnf install gcc-objc
+	sudo dnf install gcc-objc++
 #this is just here so that intellisense shuts up for once
 	sudo dnf install glibc-devel.i686
