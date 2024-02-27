@@ -9,8 +9,8 @@
 const wxSize controlSize = wxSize(200, -1);
 const int border = 5;
 const unsigned int tickSize = 10;
-const uint8_t midGray = 128;
-const uint8_t lightGray = 64;
+const unsigned char midGray = 128;
+const unsigned char lightGray = 64;
 
 mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics calculator") {
     selectingAngle = false;

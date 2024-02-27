@@ -8,11 +8,11 @@ However C++ expects to have different constructors for different multi inheritan
 So we need to do D's job for it in a linker script
 */
 
-motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height) : motionGraph(velocity, gravity, angle, width, height, 3, true){
+motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height) : motionGraph(velocity, gravity, angle, width, height, 3, false){
 
 }
 
-motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height, uint8_t lineWidth, bool reSize) : wxBitmap(width, height), motionFactory(velocity, gravity, angle){
+motionGraph::motionGraph(double velocity, double gravity, double angle, int width, int height, unsigned char lineWidth, bool reSize) : wxBitmap(width, height), motionFactory(velocity, gravity, angle){
     this->lineWidth = lineWidth;
     reScale();
     this->reSize = reSize;
@@ -45,12 +45,11 @@ void motionGraph::regraph(){
     }
     motion* thisMotion = this->getMotion(1.0 / (float)scale);
     p = wxNativePixelData::Iterator(data);
-    unsigned int prevY = 0;
     unsigned short colNum = 0;
     for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++, colNum++){
         unsigned int y = this->GetHeight() - (val * scale) - (lineWidth / 2);
         p.OffsetY(data, y);
-        uint8_t i = 0;
+        int i = 0;
         //TODO add interpolation
         while(i < lineWidth && y + i < this->GetHeight()){
             p.Red() = 255;
@@ -60,7 +59,6 @@ void motionGraph::regraph(){
             i++;
         }
         p.OffsetY(data, -y - i);
-        prevY = y;
         if(colNum > this->GetWidth()){
             break;
         }

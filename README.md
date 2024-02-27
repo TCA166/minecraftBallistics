@@ -15,11 +15,14 @@ As of right now the tools utilize four different programming languages (Fortran 
 Just run
 
 ```sh
-make requirements
+make requirements*DNF/APT*
 make all
 ```
 
 To install all necessary requirements on your system and compile everything.
+The requirements target comes in two flavors, depending on which package manager you like best.
+Feel free to play around with the CFLAGS variable, all the compilers come from GNU so they use the same console frontend.
+Also generally a good idea with this project is to stick with GNU compilers as it minimizes chances for name mangling shenanigans or some other compile time nightmares.
 
 ## Architecture
 
