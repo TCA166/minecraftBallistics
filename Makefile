@@ -9,8 +9,11 @@ all: consoleCalculator guiCalculator
 ballistics.o: fortran/ballistics.f90
 	gfortran -c fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
 
-consoleCalculator: motion.o objC/consoleCalculator.mm
-	g++ objC/consoleCalculator.mm motion.o -o consoleCalculator -lm $(CFLAGS)
+csvFile.o: objC/csvFile.m
+	gcc -c objC/csvFile.m -o csvFile.o $(CFLAGS)
+
+consoleCalculator: motion.o csvFile.o objC/consoleCalculator.mm
+	g++ objC/consoleCalculator.mm csvFile.o motion.o -o consoleCalculator -lm $(CFLAGS) -lobjc
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
