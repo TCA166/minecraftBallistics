@@ -13,7 +13,7 @@ csvFile.o: objC/csvFile.m
 	gcc -c objC/csvFile.m -o csvFile.o $(CFLAGS)
 
 consoleCalculator: motion.o csvFile.o objC/consoleCalculator.mm
-	g++ objC/consoleCalculator.mm csvFile.o motion.o -o consoleCalculator -lm $(CFLAGS) -lobjc
+	g++ objC/consoleCalculator.mm csvFile.o motion.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
@@ -41,6 +41,8 @@ requirementsAPT:
 	sudo apt install g++
 	sudo apt install libwxgtk-media3.0-gtk3-dev
 	sudo apt install gdc
+	sudo apt install gobjc
+	sudo apt install gobjc++
 
 requirementsDNF:
 	sudo dnf install gfortran

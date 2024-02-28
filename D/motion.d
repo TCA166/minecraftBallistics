@@ -27,7 +27,11 @@ extern (C++){
                 this.angle = angle;
             }
             this(double velocity, double gravity, double x, double y){
-                this(velocity, gravity, getAngle(&velocity, &gravity, &x, &y));
+                double newAngle = getAngle(&velocity, &gravity, &x, &y);
+                if(isNaN(newAngle)){
+                    throw newException("The given point is unreachable");
+                }
+                this(velocity, gravity, newAngle);
             }
             this(double velocity, double gravity, long range){
                 double rangeD = cast(double)range;

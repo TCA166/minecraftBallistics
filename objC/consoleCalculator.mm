@@ -38,14 +38,19 @@ int main(int argc, const char * argv[]){
     }
     x = atof(argv[1]);
     y = atof(argv[2]);
-    motionFactory* mf = new motionFactory(v, g, x, y);
+    motionFactory* mf;
+    @try{
+        mf = new motionFactory(v, g, x, y);
+    }
+    @catch(...){
+        printf("Invalid position\n");
+        return EXIT_FAILURE;
+    }
     double angle = mf->getCurrentAngle();
-    printf("The angle is %f", angle);
     double distance = mf->getCurrentRange();
-    printf(" and the maximum distance is %f\n", distance);
-    //FIXME objC class allocation shenangians
+    printf("The angle is %f and the maximum distance is %f\n", angle, distance);
     if(csv){
-        id instance = [[csvFile new] init];
+        id instance = [[csvFile alloc] init: "motion.csv"];
         [instance writeLine:angle :distance];
         double offset = 0.05;
         motion* m = mf->getMotion(offset);
@@ -53,6 +58,7 @@ int main(int argc, const char * argv[]){
             [instance writeLine:offset :val];
             offset += 0.05;
         }
+        [instance close];
     }
     return 0;
 }

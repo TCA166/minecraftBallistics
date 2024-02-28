@@ -64,3 +64,13 @@ double shallowAngleOfReach(const double* velocity, const double* g, const double
  @return The lowest velocity needed to hit the target
 */
 double lowestVelocity(const double* g, const double* x, const double* y);
+
+/*!
+ @brief Calculates the velocity needed to hit a target at a given angle
+ @param theta the angle of the projectile
+ @param g the acceleration due to gravity
+ @param x the x coordinate of the target
+ @param y the y coordinate of the target
+ @return The velocity needed to hit the target
+*/
+double getVelocity(const double* theta, const double* g, const double* x, const double* y);

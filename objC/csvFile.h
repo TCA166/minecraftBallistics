@@ -7,7 +7,8 @@
 
 @property (nonatomic, readonly) FILE* file;
 
--(id) initWithFile:(const char*)fileName;
++(id) alloc;
+-(id) init:(const char*)fileName;
 -(void) writeLine:(double)x: (double)y;
 -(void) close;
 

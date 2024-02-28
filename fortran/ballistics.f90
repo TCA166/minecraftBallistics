@@ -49,6 +49,12 @@ real(c_double) function lowestVelocity(g, x, y) bind(C, name="lowestVelocity")
     lowestVelocity = v
 end function lowestVelocity
 
-!!TODO add function for calculating velocity for set angle and position
+!!FIXME this is not correct
+real(c_double) function getVelocity(angle, g, x, y) bind(C, name="getVelocity")
+    real(c_double), intent(in) :: angle, g, x, y
+    real(c_double) :: v
+    v = (sqrt(g) * sqrt(x) * sqrt((tan(angle)*tan(angle))+1)) / sqrt(2 * tan(angle) - (2 * g * y) / x)
+    getVelocity = v
+end function getVelocity
 
 end module ballisticsMath

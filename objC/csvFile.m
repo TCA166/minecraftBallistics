@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #import <objc/Object.h>
 
@@ -8,15 +9,23 @@
 
 @property (nonatomic, readwrite, assign) FILE* file;
 
--(id) initWithFile:(const char*)fileName;
++(id) alloc;
+-(id) init:(const char*)fileName;
 -(void) writeLine:(double)x: (double)y;
 -(void) close;
 
 @end
 
-@implementation csvFile
+@implementation csvFile : Object
 
 @synthesize file;
+
++(id) alloc {
+    id new = nil;
+    new = calloc(1, class_getInstanceSize(self));
+    new->class_pointer = self;
+    return new;
+}
 
 - (void) writeLine:(double)x: (double)y {
     fprintf(self.file, "%f,%f\n", x, y);
@@ -26,7 +35,7 @@
     fclose(self.file);
 }
 
-- (id) initWithFile:(const char*)fileName {
+- (id) init:(const char*)fileName {
     if (self) {
         self.file = fopen(fileName, "w");
     }
