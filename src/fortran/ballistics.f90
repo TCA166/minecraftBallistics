@@ -49,14 +49,13 @@ real(c_double) function lowestVelocity(g, x, y) bind(C, name="lowestVelocity")
     lowestVelocity = v
 end function lowestVelocity
 
-!!FIXME i dont think this is right
 real(c_double) function calculateVelocity(angle, g, x, y) bind(C, name="calculateVelocity")
     real(c_double), intent(in) :: angle, g, x, y
-    real(c_double) :: v, l, a, b
-    l = g * x * tan(angle)
-    a = (g**2) * (x**2)
-    b = 2 * g * y
-    v = sqrt(-((l**2) * b) + (2 * (l**3)) - (a * b) + (2 * a * b)) / (-b + (2*l))
+    real(c_double) :: v, a, b, c
+    a = g * x * tan(angle)
+    b = -1 * (g**2) * (x**2)
+    c = -2 * g * y
+    v = sqrt(((a**2) * c) + (2 * (a**3)) - (b * c) - (2 * b * a)) / ((2*a) + c)
     calculateVelocity = v
 end function calculateVelocity
 

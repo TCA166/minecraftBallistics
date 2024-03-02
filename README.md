@@ -35,7 +35,7 @@ In order to maximize the amount of languages being used, while also keeping thin
 3. One use for each language - otherwise why not just use one for everything?
 4. No wrapping for the sake of wrapping - otherwise I could just wrap functions in functions until the end of time
 
-So as of right now four languages are used:
+So as of right now five languages are used, each for a different purpose:
 
 1. Fortran - for math
 2. C - for the C csv library

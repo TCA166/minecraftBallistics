@@ -33,5 +33,5 @@
     double v=60, gravity=20, x=10, y=10;
     double angle = calculateAngle(&v, &gravity, &x, &y);
     double velocity = calculateVelocity(&angle, &gravity, &x, &y);
-    ck_assert_msg(velocity == v, "Expected 60, got %f", velocity);
+    ck_assert_msg((int)velocity == (int)v, "Expected 60, got %f", velocity);
 

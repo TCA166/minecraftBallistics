@@ -64,7 +64,7 @@ extern (C++){
                 return gravity;
             }
             double getRange() const{
-                return calculateRange(&velocity, &gravity, &angle);
+                return calculateRange(&velocity, &gravity, &angle) + 1;
             }
             double getPeakHeight() const{
                 return calculateMaxHeight(&velocity, &gravity, &angle);

@@ -45,19 +45,20 @@ void motionGraph::regraph(){
     }
     motion* thisMotion = this->getMotion(1.0 / (float)scale);
     p = wxNativePixelData::Iterator(data);
+    unsigned int prevY = 0;
     unsigned short colNum = 0;
     for(double val = thisMotion->next(); !thisMotion->empty(); val = thisMotion->next(), p++, colNum++){
         unsigned int y = this->GetHeight() - (val * scale) - (lineWidth / 2);
         p.OffsetY(data, y);
         int i = 0;
-        //TODO add interpolation
-        while(i < lineWidth && y + i < this->GetHeight()){
+        while(i < lineWidth + abs((int)y - (int)prevY) && (int)y + i < this->GetHeight()){
             p.Red() = 255;
             p.Green() = 0;
             p.Blue() = 0;
             p.OffsetY(data, 1);
             i++;
         }
+        prevY = y;
         p.OffsetY(data, -y - i);
         if(colNum > this->GetWidth()){
             break;
