@@ -68,7 +68,7 @@ void motionGraph::regraph(){
 
 void motionGraph::reScale(){
     if(reSize){
-        double scale = this->GetWidth() / (this->getCurrentRange() * 1.1);
+        double scale = this->GetWidth() / (this->getRange() * 1.1);
         if(scale * this->getPeakHeight() * 1.1 > this->GetHeight()){
             scale = this->GetHeight() / (this->getPeakHeight() * 1.1);
         }
@@ -108,5 +108,10 @@ void motionGraph::setReSize(bool reSize){
 
 void motionGraph::setOptimal(double x, double y){
     motionFactory::setOptimal(x, y);
+    reScale();
+}
+
+void motionGraph::setVelocity(double x, double y){
+    motionFactory::setVelocity(x, y);
     reScale();
 }

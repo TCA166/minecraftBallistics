@@ -8,8 +8,6 @@ import std.math : isNaN;
 import core.stdc.stdlib : malloc;
 import std.conv : emplace;
 
-bool runtimeInitialized = false;
-
 Exception newException(string message){
     size_t size = __traits(classInstanceSize, Exception);
     void[] ptr = malloc(size)[0..size];
@@ -27,7 +25,7 @@ extern (C++){
                 this.angle = angle;
             }
             this(double velocity, double gravity, double x, double y){
-                double newAngle = getAngle(&velocity, &gravity, &x, &y);
+                double newAngle = calculateAngle(&velocity, &gravity, &x, &y);
                 if(isNaN(newAngle)){
                     throw newException("The given point is unreachable");
                 }
@@ -43,13 +41,20 @@ extern (C++){
             void setVelocity(double velocity){
                 this.velocity = velocity;
             }
+            void setVelocity(double x, double y){
+                double newVelocity = calculateVelocity(&angle, &gravity, &x, &y);
+                if(isNaN(newVelocity)){
+                    throw newException("The given point is unreachable");
+                }
+                this.velocity = newVelocity;
+            }
             void setOptimal(double x, double y){
                 double newVelocity = lowestVelocity(&gravity, &x, &y);
                 if(isNaN(newVelocity)){
                     throw newException("The given point is unreachable");
                 }
                 this.velocity = newVelocity;
-                double newAngle = getAngle(&velocity, &gravity, &x, &y);
+                double newAngle = calculateAngle(&velocity, &gravity, &x, &y);
                 if(isNaN(newAngle)){
                     throw newException("The given point is unreachable");
                 }
@@ -58,20 +63,20 @@ extern (C++){
             double getGravity() const{
                 return gravity;
             }
-            double getCurrentRange() const{
-                return getRange(&velocity, &gravity, &angle);
+            double getRange() const{
+                return calculateRange(&velocity, &gravity, &angle);
             }
             double getPeakHeight() const{
-                return getMaxHeight(&velocity, &gravity, &angle);
+                return calculateMaxHeight(&velocity, &gravity, &angle);
             }
-            double getCurrentAngle() const{
+            double getAngle() const{
                 return this.angle;
             }
             void setAngle(double angle){
                 this.angle = angle;
             }
             void setAngle(double x, double y){
-                double newAngle = getAngle(&velocity, &gravity, &x, &y);
+                double newAngle = calculateAngle(&velocity, &gravity, &x, &y);
                 if(isNaN(newAngle)){
                     throw newException("The given point is unreachable");
                 }
@@ -82,7 +87,7 @@ extern (C++){
                 this.angle = shallowAngleOfReach(&velocity, &gravity, &rangeD);
             }
             double getY(double x) const{
-                return getHeight(&velocity, &gravity, &angle, &x);
+                return calculateHeight(&velocity, &gravity, &angle, &x);
             }
             motion getMotion(double step) const{
                 /*
@@ -107,10 +112,10 @@ extern (C++){
                 super(velocity, gravity, angle);
                 this.current = 0;
                 this.step = step;
-                this.range = this.getCurrentRange();
+                this.range = this.getRange();
             }
             this(double velocity, double gravity, double x, double y, double step){
-                this(velocity, gravity, getAngle(&velocity, &gravity, &x, &y), step);
+                this(velocity, gravity, calculateAngle(&velocity, &gravity, &x, &y), step);
             }
             bool empty() const{
                 return current > range;

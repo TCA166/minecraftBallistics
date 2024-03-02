@@ -26,6 +26,12 @@ class motionFactory {
         */
         void setVelocity(double velocity);
         /*!
+         @brief Set the starting velocity of the projectile
+         @param x the x coordinate of the target
+         @param y the y coordinate of the target
+        */
+        void setVelocity(double x, double y);
+        /*!
          @brief Sets the optimal velocity and angle to reach a target
          @param x the x coordinate of the target
          @param y the y coordinate of the target
@@ -40,7 +46,7 @@ class motionFactory {
          @brief Calculates the range of the projectile
          @return the range of the projectile
         */
-        double getCurrentRange() const;
+        double getRange() const;
         /*!
          @brief Get the peak height of the projectile
          @return the peak height of the projectile
@@ -50,7 +56,7 @@ class motionFactory {
          @brief Get the angle of the projectile
          @return the angle of the projectile
         */
-        double getCurrentAngle() const;
+        double getAngle() const;
         /*!
          @brief Set the angle of the projectile
          @param angle the angle of the projectile

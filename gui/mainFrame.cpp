@@ -52,6 +52,9 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         findOptimal = new wxButton(this, wxID_ANY, wxT("Find Optimal"), wxDefaultPosition, controlSize, 0);
         bSizer7->Add(findOptimal, 0, wxALL, border);
 
+        findVelocity = new wxButton(this, wxID_ANY, wxT("Find Velocity"), wxDefaultPosition, controlSize, 0);
+        bSizer7->Add(findVelocity, 0, wxALL, border);
+
         velocityText = new wxStaticText(this, wxID_ANY, wxT("Velocity"), wxDefaultPosition, controlSize, 0);
         velocityText->Wrap(-1);
         bSizer7->Add(velocityText, 0, wxALL, border);
@@ -86,6 +89,7 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         this->Connect(wxEVT_SIZE, wxSizeEventHandler(mainFrame::mainFrameOnSize));
         findAngle->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainFrame::findAngleOnButtonClick), NULL, this);
         findOptimal->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainFrame::findOptimalOnButtonClick), NULL, this);
+        findVelocity->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainFrame::findVelocityOnButtonClick), NULL, this);
         velocitySlider->Connect(wxEVT_SCROLL_TOP, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
         velocitySlider->Connect(wxEVT_SCROLL_BOTTOM, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
         velocitySlider->Connect(wxEVT_SCROLL_LINEUP, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
@@ -140,17 +144,18 @@ void mainFrame::setVelocity(double velocity){
 }
 
 void mainFrame::unsetAngleSelect(){
-    if(!selectingAngle && !selectingOptimal){
+    if(!selectingAngle && !selectingOptimal && !selectingVelocity){
         return;
     }
     selectingAngle = false;
     selectingOptimal = false;
+    selectingVelocity = false;
     SetStatusText("");
     wxSetCursor(wxCursor(wxCURSOR_DEFAULT));
 }
 
 void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
-    if(!selectingAngle && !selectingOptimal){
+    if(!selectingAngle && !selectingOptimal && !selectingVelocity){
         return;
     }
     double x = event.GetX() / graph->getScale();
@@ -158,12 +163,21 @@ void mainFrame::graphPanelOnLeftDown(wxMouseEvent& event){
     try{
         if(selectingAngle){
             graph->setAngle(x, y);
-            angleSlider->SetValue((int)(graph->getCurrentAngle() * 100));
+            angleSlider->SetValue((int)(graph->getAngle() * 100));
         }
         else if(selectingOptimal){
             graph->setOptimal(x, y);
             velocitySlider->SetValue((int)graph->getVelocity());
-            angleSlider->SetValue((int)(graph->getCurrentAngle() * 100));
+            angleSlider->SetValue((int)(graph->getAngle() * 100));
+        }
+        else if(selectingVelocity){
+            double oldV = graph->getVelocity();
+            graph->setVelocity(x, y);
+            if(graph->getVelocity() > maxArrowVelocity){
+                graph->setVelocity(oldV);
+                throw std::exception();
+            }
+            velocitySlider->SetValue((int)graph->getVelocity());
         }
     }
     catch(...){
@@ -182,6 +196,12 @@ void mainFrame::findAngleOnButtonClick(wxCommandEvent& event){
 
 void mainFrame::findOptimalOnButtonClick(wxCommandEvent& event){
     selectingOptimal = true;
+    wxSetCursor(wxCursor(wxCURSOR_CROSS));
+    SetStatusText("Select a point on the graph");
+}
+
+void mainFrame::findVelocityOnButtonClick(wxCommandEvent& event){
+    selectingVelocity = true;
     wxSetCursor(wxCursor(wxCURSOR_CROSS));
     SetStatusText("Select a point on the graph");
 }

@@ -53,6 +53,12 @@ class motionGraph : public wxBitmap, public motionFactory{
         */
         void setVelocity(double velocity);
         /*!
+         @brief Sets the velocity of the projectile to reach a given target
+         @param x the x coordinate of the target
+         @param y the y coordinate of the target
+        */
+        void setVelocity(double x, double y);
+        /*!
          @brief Gets the scale of the graph
          @return the scale of the graph
         */

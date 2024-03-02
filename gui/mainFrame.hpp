@@ -9,6 +9,7 @@ class mainFrame : public wxFrame {
     protected:
 		wxButton* findAngle;
         wxButton* findOptimal;
+        wxButton* findVelocity;
 		wxStaticText* velocityText;
 		wxSlider* velocitySlider;
         wxStaticText* angleText;
@@ -17,6 +18,7 @@ class mainFrame : public wxFrame {
         wxStaticBitmap* graphPanel;
         bool selectingAngle;
         bool selectingOptimal;
+        bool selectingVelocity;
         motionGraph* graph;
         /*!
          @brief Regraphs the bitmap graph
@@ -25,6 +27,7 @@ class mainFrame : public wxFrame {
         virtual void mainFrameOnSize(wxSizeEvent& event);
 		virtual void findAngleOnButtonClick(wxCommandEvent& event);
         virtual void findOptimalOnButtonClick(wxCommandEvent& event);
+        virtual void findVelocityOnButtonClick(wxCommandEvent& event);
 		virtual void velocitySliderOnScroll(wxScrollEvent& event);
 		virtual void angleSliderOnScroll(wxScrollEvent& event);
         virtual void graphPanelOnLeftDown(wxMouseEvent& event);

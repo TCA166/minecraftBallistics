@@ -21,7 +21,7 @@ int main(int argc, const char * argv[]){
         v = atof(argv[1]);
         double angle = 0.90;
         motionFactory* mf = new motionFactory(v, g, angle);
-        double range = mf->getCurrentRange();
+        double range = mf->getRange();
         printf("Max range for velocity %f is %f\n", v, range);
         return EXIT_SUCCESS;
     }
@@ -46,8 +46,8 @@ int main(int argc, const char * argv[]){
         printf("Invalid position\n");
         return EXIT_FAILURE;
     }
-    double angle = mf->getCurrentAngle();
-    double distance = mf->getCurrentRange();
+    double angle = mf->getAngle();
+    double distance = mf->getRange();
     printf("The angle is %f and the maximum distance is %f\n", angle, distance);
     if(csv){
         id instance = [[csvFile alloc] init: "motion.csv"];
