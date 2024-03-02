@@ -26,8 +26,8 @@
 }
 
 - (void) writeLine:(double)x: (double)y {
-    const double* values[] = {&x, &y};
-    writeCSVvalues(2, (const void**)values, "%f", self->file);
+    const double values[] = {x, y};
+    writeCSVvalues(2, (const double*)values, "%f", self->file);
 }
 
 - (void) close {
@@ -38,6 +38,8 @@
     if(self) {
         self->file = newCSV(fileName, ',', '\n');
     }
+    const char* values[] = {"x", "y"};
+    setHeader(2, (char**)values, self->file);
     return self;
 }
 

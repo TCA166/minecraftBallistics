@@ -74,3 +74,11 @@ double lowestVelocity(const double* g, const double* x, const double* y);
  @return The velocity needed to hit the target
 */
 double calculateVelocity(const double* theta, const double* g, const double* x, const double* y);
+
+/*!
+ @brief Gets the max height of the projectile from the range
+ @param angle The angle of the projectile
+ @param range The range of the projectile
+ @return The max height of the projectile
+*/
+double getMaxHeight(const double* angle, const double* range);

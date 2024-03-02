@@ -14,7 +14,7 @@ int main(int argc, const char * argv[]){
     double v, x, g, y;
     g = minecraftGravity;
     if(argc < 2){ //help case
-        printf("Usage: %s <maxArrowVelocity> <x> <y>\n", argv[0]);
+        printf("Usage: %s <x> <y> <arrow velocity>\n", argv[0]);
         return EXIT_FAILURE;
     }
     else if(argc == 2){ //we check max range for velocity

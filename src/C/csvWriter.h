@@ -44,4 +44,4 @@ size_t setHeader(size_t n, char** values, csv* c);
  @param c the csv file to write to
  @return the number of characters written
 */
-size_t writeCSVvalues(size_t n, const void** values, const char* format, csv* c);
+size_t writeCSVvalues(size_t n, const double* values, const char* format, csv* c);

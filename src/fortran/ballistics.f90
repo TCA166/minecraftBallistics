@@ -59,4 +59,11 @@ real(c_double) function calculateVelocity(angle, g, x, y) bind(C, name="calculat
     calculateVelocity = v
 end function calculateVelocity
 
+real(c_double) function getMaxHeight(angle, range) bind(C, name="getMaxHeight")
+    real(c_double), intent(in) :: angle, range
+    real(c_double) :: height
+    height = range * tan(angle) / 4
+    getMaxHeight = height
+end function getMaxHeight
+
 end module ballisticsMath

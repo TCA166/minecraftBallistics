@@ -15,7 +15,7 @@ csv* newCSV(const char* filename, char delimiter, char newline){
     return c;
 }
 
-size_t writeCSVvalues(size_t n, const void** values, const char* format, csv* c){
+size_t writeCSVvalues(size_t n, const double* values, const char* format, csv* c){
     size_t written = 0;
     for(size_t i = 0; i < n; i++){
         fprintf(c->file, format, values[i]);

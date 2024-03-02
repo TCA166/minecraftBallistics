@@ -131,6 +131,9 @@ extern (C++){
             double getOffset() const{
                 return current;
             }
+            override double getPeakHeight() const{
+                return getMaxHeight(&angle, &range);
+            }
         private:
             double current;
             const double step;
