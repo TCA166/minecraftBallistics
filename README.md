@@ -38,8 +38,9 @@ In order to maximize the amount of languages being used, while also keeping thin
 So as of right now four languages are used:
 
 1. Fortran - for math
-2. Objective C - for the console utility frontend
-3. D - for the OOP Fortran wrapper (Did you know that D has a crazy level of linkage support?)
-4. C++ - for the GUI app
+2. C - for the C csv library
+3. Objective C - for the console utility frontend
+4. D - for the OOP Fortran wrapper (Did you know that D has a crazy level of linkage support?)
+5. C++ - for the GUI app
 
 ### Dependency Tree

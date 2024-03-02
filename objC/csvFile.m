@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../C/csvWriter.h"
+
 #import <objc/Object.h>
 
 @interface csvFile : Object{
-    FILE* file;
+    csv* file;
 }
-
-@property (nonatomic, readwrite, assign) FILE* file;
 
 +(id) alloc;
 -(id) init:(const char*)fileName;
@@ -18,8 +18,6 @@
 
 @implementation csvFile : Object
 
-@synthesize file;
-
 +(id) alloc {
     id new = nil;
     new = calloc(1, class_getInstanceSize(self));
@@ -28,16 +26,17 @@
 }
 
 - (void) writeLine:(double)x: (double)y {
-    fprintf(self.file, "%f,%f\n", x, y);
+    const double* values[] = {&x, &y};
+    writeCSVvalues(2, (const void**)values, "%f", self->file);
 }
 
 - (void) close {
-    fclose(self.file);
+    fclose(self->file->file);
 }
 
 - (id) init:(const char*)fileName {
-    if (self) {
-        self.file = fopen(fileName, "w");
+    if(self) {
+        self->file = newCSV(fileName, ',', '\n');
     }
     return self;
 }

@@ -3,9 +3,7 @@
 
 //I know this file should be named csvFile.h, but then everything thinks this is a C file and that annoys me
 
-@interface csvFile : Object{
-    FILE* file;
-}
+@interface csvFile : Object
 
 @property (nonatomic, readonly) FILE* file;
 

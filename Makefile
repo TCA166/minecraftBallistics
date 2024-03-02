@@ -9,11 +9,14 @@ all: consoleCalculator guiCalculator
 ballistics.o: fortran/ballistics.f90
 	gfortran -c fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
 
+csv.o: C/csvWriter.c
+	gcc -c C/csvWriter.c -o csv.o $(CFLAGS)
+
 csvFile.o: objC/csvFile.m
 	gcc -c objC/csvFile.m -o csvFile.o $(CFLAGS)
 
-consoleCalculator: motion.o csvFile.o objC/consoleCalculator.mm
-	g++ objC/consoleCalculator.mm csvFile.o motion.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
+consoleCalculator: motion.o csvFile.o objC/consoleCalculator.mm csv.o
+	g++ objC/consoleCalculator.mm csvFile.o motion.o csv.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
