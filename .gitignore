@@ -2,3 +2,5 @@
 *.mod
 consoleCalculator
 guiCalculator
+mathTests
+tests/mathTests.c

@@ -6,37 +6,42 @@ debug: all
 
 all: consoleCalculator guiCalculator
 
-ballistics.o: fortran/ballistics.f90
-	gfortran -c fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
+ballistics.o: src/fortran/ballistics.f90
+	gfortran -c src/fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
 
-csv.o: C/csvWriter.c
-	gcc -c C/csvWriter.c -o csv.o $(CFLAGS)
+csv.o: src/C/csvWriter.c
+	gcc -c src/C/csvWriter.c -o csv.o $(CFLAGS)
 
-csvFile.o: objC/csvFile.m
-	gcc -c objC/csvFile.m -o csvFile.o $(CFLAGS)
+csvFile.o: src/objC/csvFile.m
+	gcc -c src/objC/csvFile.m -o csvFile.o $(CFLAGS)
 
-consoleCalculator: motion.o csvFile.o objC/consoleCalculator.mm csv.o
-	g++ objC/consoleCalculator.mm csvFile.o motion.o csv.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
+consoleCalculator: motion.o csvFile.o src/objC/consoleCalculator.mm csv.o
+	g++ src/objC/consoleCalculator.mm csvFile.o motion.o csv.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
-mainFrame.o: gui/mainFrame.cpp
-	g++ -c gui/mainFrame.cpp -o mainFrame.o $(CFLAGS) $(wxFlags)
+mainFrame.o: src/gui/mainFrame.cpp
+	g++ -c src/gui/mainFrame.cpp -o mainFrame.o $(CFLAGS) $(wxFlags)
 
-motionGraph.o: gui/motionGraph.cpp motion.o D/mi.ld
-	g++ -c gui/motionGraph.cpp -o motionG.o $(CFLAGS) $(wxFlags)
+motionGraph.o: src/gui/motionGraph.cpp motion.o src/D/mi.ld
+	g++ -c src/gui/motionGraph.cpp -o motionG.o $(CFLAGS) $(wxFlags)
 #we link using a custom link script to go around D's lack of multi inheritance support
-	ld -r motion.o D/mi.ld motionG.o -o motionGraph.o
+	ld -r motion.o src/D/mi.ld motionG.o -o motionGraph.o
 
-guiCalculator: motionGraph.o gui/main.cpp mainFrame.o
-	g++ gui/main.cpp motionGraph.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
+guiCalculator: motionGraph.o src/gui/main.cpp mainFrame.o
+	g++ src/gui/main.cpp motionGraph.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
 
 #we link it here with motion.o, because it is required by D code, and we don't use D anywhere else
-motion.o: D/motion.d ballistics.o
-	gdc -r D/motion.d ballistics.o -o motion.o $(CFLAGS) -static-libphobos -J fortran
+motion.o: src/D/motion.d ballistics.o
+	gdc -r src/D/motion.d ballistics.o -o motion.o $(CFLAGS) -static-libphobos -J src/fortran
 
 clean:
 	rm -f *.o consoleCalculator *.mod
+
+mathTests: tests/mathTests.check ballistics.o
+	checkmk tests/mathTests.check > tests/mathTests.c
+	gcc tests/mathTests.c ballistics.o -o mathTests -lm -lcheck -lsubunit $(CFLAGS)
+	./mathTests
 
 requirements: requirementsAPT
 

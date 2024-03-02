@@ -1,0 +1,37 @@
+#include "../src/fortran/ballistics.h"
+
+#suite angleTests
+
+#test testInputZero
+    double v=0, gravity=0, x=0, y=0;
+    double angle = calculateAngle(&v, &gravity, &x, &y);
+    ck_assert_msg(isnan(angle), "Expected NaN, got %f", angle);
+
+#test testInputZeroCoord
+    double v=10, gravity=9.8, x=0, y=0;
+    double angle = calculateAngle(&v, &gravity, &x, &y);
+    ck_assert_msg(isnan(angle), "Expected NaN, got %f", angle);
+
+#test testInputLeft
+    double v=60, gravity=20, x=70, y=50;
+    double angle = calculateAngle(&v, &gravity, &x, &y) * 100;
+    ck_assert_msg((int)angle == 86, "Expected 86, got %f", angle);
+
+#test testInputRight
+    double v=60, gravity=20, x=110, y=50;
+    double angle = calculateAngle(&v, &gravity, &x, &y) * 100;
+    ck_assert_msg((int)angle == 87, "Expected 87, got %f", angle);
+
+#test testHighHeight
+    double v=60, gravity=20, x=10, y=89;
+    double angle = calculateAngle(&v, &gravity, &x, &y) * 100;
+    ck_assert_msg((int)angle == 150, "Expected 120, got %f", angle);
+
+#suite velocityTests
+
+#test testEqual
+    double v=60, gravity=20, x=10, y=10;
+    double angle = calculateAngle(&v, &gravity, &x, &y);
+    double velocity = calculateVelocity(&angle, &gravity, &x, &y);
+    ck_assert_msg(velocity == v, "Expected 60, got %f", velocity);
+
