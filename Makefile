@@ -35,6 +35,8 @@ motion.o: D/motion.d ballistics.o
 clean:
 	rm -f *.o consoleCalculator *.mod
 
+requirements: requirementsAPT
+
 requirementsAPT:
 	sudo apt install gfortran
 	sudo apt install gcc
