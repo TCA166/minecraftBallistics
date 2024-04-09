@@ -6,6 +6,8 @@
 #include "mainFrame.hpp"
 #include "../constants.h"
 
+#include "../objC/csvFile.h"
+
 const wxSize controlSize = wxSize(200, -1);
 const int border = 5;
 const unsigned int tickSize = 10;
@@ -72,6 +74,9 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         resizeCheck = new wxCheckBox(this, wxID_ANY, wxT("Auto rescale"), wxDefaultPosition, controlSize, 0);
         bSizer7->Add(resizeCheck, 0, wxALL, border);
 
+        exportButton = new wxButton(this, wxID_ANY, wxT("Export to CSV"), wxDefaultPosition, controlSize, 0);
+        bSizer7->Add(exportButton, 0, wxALL, border);
+
         graph = new motionGraph(maxArrowVelocity, minecraftGravity, 0.9, m_width - controlSize.x - (border * 4), m_height - (border * 12));
         graphPanel = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize(graph->GetWidth(), graph->GetHeight()), 0);
         regraph();
@@ -110,6 +115,7 @@ mainFrame::mainFrame() : wxFrame(NULL, wxID_ANY, "Minecraft arrow ballistics cal
         angleSlider->Connect(wxEVT_SCROLL_CHANGED, wxScrollEventHandler(mainFrame::angleSliderOnScroll), NULL, this);
         graphPanel->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(mainFrame::graphPanelOnLeftDown), NULL, this);
         resizeCheck->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(mainFrame::resizeCheckOnCheckBox), NULL, this);
+        exportButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(mainFrame::exportButtonClick), NULL, this);
         this->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(mainFrame::mainFrameOnLeftUp), NULL, this);
         //Menu events
         Bind(wxEVT_MENU, &mainFrame::OnAbout, this, wxID_ABOUT);
@@ -129,6 +135,7 @@ mainFrame::~mainFrame(){
 	velocitySlider->Disconnect(wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
 	velocitySlider->Disconnect(wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
 	velocitySlider->Disconnect(wxEVT_SCROLL_CHANGED, wxScrollEventHandler(mainFrame::velocitySliderOnScroll), NULL, this);
+    //TODO expand
 }
 
 void mainFrame::setAngle(double angle){
@@ -141,6 +148,17 @@ void mainFrame::setVelocity(double velocity){
     graph->setVelocity(velocity);
     velocitySlider->SetValue((int)velocity);
     regraph();
+}
+
+void mainFrame::exportButtonClick(wxCommandEvent& event){
+    csvFile file = csvFile_alloc();
+    csvFile_init(file, "output.csv");
+    for(int i = 0; i < graph->getRange() - 1; i++){
+        csvFile_writeLine(file, i, graph->getY(i));
+    }
+    csvFile_close(file);
+    csvFile_free(file);
+    SetStatusText("Exported to output.csv");
 }
 
 void mainFrame::unsetAngleSelect(){

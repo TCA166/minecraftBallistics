@@ -16,6 +16,7 @@ class mainFrame : public wxFrame {
 		wxSlider* angleSlider;
         wxCheckBox* resizeCheck;
         wxStaticBitmap* graphPanel;
+        wxButton* exportButton;
         bool selectingAngle;
         bool selectingOptimal;
         bool selectingVelocity;
@@ -33,6 +34,7 @@ class mainFrame : public wxFrame {
         virtual void graphPanelOnLeftDown(wxMouseEvent& event);
         virtual void mainFrameOnLeftUp(wxMouseEvent& event);
         virtual void resizeCheckOnCheckBox(wxCommandEvent& event);
+        virtual void exportButtonClick(wxCommandEvent& event);
         virtual void unsetAngleSelect();
         void setAngle(double angle);
         void setVelocity(double velocity);

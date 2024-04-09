@@ -4,3 +4,4 @@ consoleCalculator
 guiCalculator
 mathTests
 tests/mathTests.c
+*.csv

@@ -26,7 +26,9 @@
 }
 
 - (void) writeLine:(double)x: (double)y {
-    const double values[] = {x, y};
+    double values[2] = {};
+    values[0] = x;
+    values[1] = y;
     writeCSVvalues(2, (const double*)values, "%f", self->file);
 }
 

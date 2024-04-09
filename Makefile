@@ -12,11 +12,14 @@ ballistics.o: src/fortran/ballistics.f90
 csv.o: src/C/csvWriter.c
 	gcc -c src/C/csvWriter.c -o csv.o $(CFLAGS)
 
-csvFile.o: src/objC/csvFile.m
-	gcc -c src/objC/csvFile.m -o csvFile.o $(CFLAGS)
+csvFile.o: src/objC/csvFile.m csv.o
+	gcc -r src/objC/csvFile.m -o csvFile.o csv.o $(CFLAGS)
+#By default gcc puts objC method functions in the text section, making them local. We have to work around that like this
+#you don't get it do you? this is the fun part of the project as in the part that makes you want to die but then you feel like a genious
+	objcopy --globalize-symbol=_c_csvFile__alloc --globalize-symbol=_i_csvFile__init_ --globalize-symbol=_i_csvFile__writeLine__ --globalize-symbol=_i_csvFile__close csvFile.o csvFile.o
 
-consoleCalculator: motion.o csvFile.o src/objC/consoleCalculator.mm csv.o
-	g++ src/objC/consoleCalculator.mm csvFile.o motion.o csv.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
+consoleCalculator: motion.o csvFile.o src/objC/consoleCalculator.mm
+	g++ src/objC/consoleCalculator.mm csvFile.o motion.o -o consoleCalculator -lm $(CFLAGS) -lobjc -fobjc-exceptions
 
 wxFlags := $(shell wx-config --cxxflags --libs)
 
@@ -28,8 +31,8 @@ motionGraph.o: src/gui/motionGraph.cpp motion.o src/D/mi.ld
 #we link using a custom link script to go around D's lack of multi inheritance support
 	ld -r motion.o src/D/mi.ld motionG.o -o motionGraph.o
 
-guiCalculator: motionGraph.o src/gui/main.cpp mainFrame.o
-	g++ src/gui/main.cpp motionGraph.o mainFrame.o -o guiCalculator -lm $(CFLAGS) $(wxFlags)
+guiCalculator: motionGraph.o src/gui/main.cpp mainFrame.o csvFile.o
+	g++ src/gui/main.cpp motionGraph.o csvFile.o mainFrame.o -o guiCalculator -lm -lobjc $(CFLAGS) $(wxFlags)
 
 #we link it here with motion.o, because it is required by D code, and we don't use D anywhere else
 motion.o: src/D/motion.d ballistics.o
