@@ -6,7 +6,7 @@ The object oriented math wrapper part to be exact.
 ## Why D?
 
 Because D has a pretty good amount of linkage support.
-It can easily link with C, C++ and objective C which is more than most lanugages can claim.
+It can easily link with C, C++ and objective C which is more than most languages can claim.
 This support includes methods, inheritance and even exceptions!
 Also D is a very nice language that very clearly improves on plenty of issues with C++.
 
