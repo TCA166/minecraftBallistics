@@ -59,6 +59,10 @@ int main(int argc, const char * argv[]){
             offset += 0.05;
         }
         [instance close];
+        free(instance);
+        free(m);
     }
+    delete mf;
+    //FIXMEi am leaking memory somehwere... or at least that's what valgrind says. It happens in some internal objC stuff
     return 0;
 }
