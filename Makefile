@@ -6,8 +6,11 @@ debug: all
 
 all: consoleCalculator guiCalculator
 
-ballistics.o: src/fortran/ballistics.f90
-	gfortran -c src/fortran/ballistics.f90 -o ballistics.o $(CFLAGS)
+altMath.o: src/asm/altMath.asm
+	as src/asm/altMath.asm -o altMath.o
+
+ballistics.o: src/fortran/ballistics.f90 altMath.o
+	gfortran -r src/fortran/ballistics.f90 altMath.o -o ballistics.o $(CFLAGS)
 
 csv.o: src/C/csvWriter.c
 	gcc -c src/C/csvWriter.c -o csv.o $(CFLAGS)

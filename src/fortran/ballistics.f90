@@ -1,5 +1,6 @@
 module ballisticsMath
     use, intrinsic :: ISO_C_BINDING
+    use altMath
     implicit none
 contains
 
@@ -8,7 +9,7 @@ contains
 real(c_double) function calculateAngle(v, g, x, y) bind(C, name="calculateAngle")
     real(c_double), intent(in) :: v, g, x, y
     real(c_double) :: angle
-    angle = atan((v**2 - sqrt(v**4 - g*((g*(x**2)) + (2*y*(v**2)))))/(g*x))
+    angle = atan((v**2 - sqrt_asm(v**4 - g*((g*(x**2)) + (2*y*(v**2)))))/(g*x))
     calculateAngle = angle
 end function calculateAngle
 
@@ -45,7 +46,7 @@ end function shallowAngleOfReach
 real(c_double) function lowestVelocity(g, x, y) bind(C, name="lowestVelocity")
     real(c_double), intent(in) :: g, x, y
     real(c_double) :: v
-    v = sqrt(g * (y + sqrt(y**2 + x**2)))
+    v = sqrt_asm(g * (y + sqrt_asm(y**2 + x**2)))
     lowestVelocity = v
 end function lowestVelocity
 
@@ -55,7 +56,7 @@ real(c_double) function calculateVelocity(angle, g, x, y) bind(C, name="calculat
     a = g * x * tan(angle)
     b = -1 * (g**2) * (x**2)
     c = -2 * g * y
-    v = sqrt(((a**2) * c) + (2 * (a**3)) - (b * c) - (2 * b * a)) / ((2*a) + c)
+    v = sqrt_asm(((a**2) * c) + (2 * (a**3)) - (b * c) - (2 * b * a)) / ((2*a) + c)
     calculateVelocity = v
 end function calculateVelocity
 
